@@ -1,7 +1,7 @@
 
 # Kanji Learning App
 
-A language learning app for Japanese word characters not part of a syllabary, i.e. the shape of the characters tell you nothing about how to pronounce them, so you must learn them one by one. These are known as "kanji".
+A language learning app for Japanese word characters not part of a syllabary, i.e. the shape of the characters tells you nothing about how to pronounce them, so you must learn them one by one. These are known as "kanji".
 
 The average kanji character has two readings: one known as the "on"-reading (of Chinese origin and typically used in compounds), and one known as the "kun"-reading (of native origin). The learner needs to know both.
 
