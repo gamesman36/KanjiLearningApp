@@ -1,5 +1,6 @@
 import "./App.css";
 import Kanji from "./Kanji";
+import UserInput from "./UserInput";
 import characters from "./characters.json";
 
 console.log(characters);
@@ -8,8 +9,11 @@ let randomCharacter = characters[randomChoice].japanese;
 
 function App() {
   return (
-    <div className="kanji">
-      <Kanji unicodeValue={randomCharacter}/>
+    <div>
+      <div className="kanji">
+        <Kanji unicodeValue={randomCharacter} />
+      </div>
+      <UserInput />
     </div>
   )
 }
