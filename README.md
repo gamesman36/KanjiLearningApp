@@ -8,7 +8,7 @@ The average kanji character has two readings: one known as the "on"-reading (of 
 If more than one reading exists in either category the app will simply aim to teach the most frequent one. It is meant as a learning aid rather than an exhaustive reference.
 ## Tech
 
-This app will use a React frontend, a Node.js backend and an SQL database.
+This app uses a React frontend, a Node.js backend and an SQL database.
 ## Acknowledgements
  - **Easy Japanese by Jack Seward** (General information about kanji)
  - **Kodansha Kanji Learner's Dictionary, ed. Jack Halpern** (Authoritative source for kanji readings)
