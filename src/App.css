@@ -1,7 +1,16 @@
 body {
     text-align: center;
+    margin-top: 45px;
 }
 
 .kanji {
     font-size: 48pt;
+}
+
+.input {
+    margin-top: 10px;
+}
+
+.btn {
+    margin-top: 10px;
 }
