@@ -2,31 +2,31 @@
     {
       "japanese": "川",
       "english": "river",
-      "on": "sen",
-      "kun": "kawa"
+      "onyomi": "sen",
+      "kunyomi": "kawa"
     },
     {
       "japanese": "小",
       "english": "small",
-      "on": "shou",
-      "kun": "chii"
+      "onyomi": "shou",
+      "kunyomi": "chii"
     },
     {
       "japanese": "水",
       "english": "water",
-      "on": "sui",
-      "kun": "mizu"
+      "onyomi": "sui",
+      "kunyomi": "mizu"
     },
     {
       "japanese": "休",
       "english": "rest",
-      "on": "kyuu",
-      "kun": "yasu"
+      "onyomi": "kyuu",
+      "kunyomi": "yasu"
     },
     {
       "japanese": "竹",
       "english": "bamboo",
-      "on": "chiku",
-      "kun": "take"
+      "onyomi": "chiku",
+      "kunyomi": "take"
     }
   ]
