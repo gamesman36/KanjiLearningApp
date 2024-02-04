@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 
-function UserInput({ randomCharacter, updateScore }) {
+function UserInput({ randomCharacter, updateScore, fetchRandomCharacter }) {
     const onyomiRef = useRef();
     const kunyomiRef = useRef();
     const [score, setScore] = useState(0);
@@ -37,6 +37,7 @@ function UserInput({ randomCharacter, updateScore }) {
             setScore((prevScore) => prevScore + 1);
 
         alert(`Onyomi: ${onyomiStatus} Kunyomi: ${kunyomiStatus}`);
+        fetchRandomCharacter();
     }
 
     return (
