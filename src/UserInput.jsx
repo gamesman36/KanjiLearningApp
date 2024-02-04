@@ -1,13 +1,18 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
-function UserInput({randomCharacter}) {
+function UserInput({ randomCharacter, updateScore }) {
     const onyomiRef = useRef();
     const kunyomiRef = useRef();
+    const [score, setScore] = useState(0);
+
+    useEffect(() => {
+        updateScore(score);
+    }, [score, updateScore]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const onyomi = onyomiRef.current.value;
-        const kunyomi = kunyomiRef.current.value;
+        const onyomi = onyomiRef.current.value.toLowerCase();
+        const kunyomi = kunyomiRef.current.value.toLowerCase();
 
         processAnswers(onyomi, kunyomi);
 
@@ -17,14 +22,19 @@ function UserInput({randomCharacter}) {
 
     const processAnswers = (onyomi, kunyomi) => {
         let onyomiStatus = 
-            randomCharacter.onyomi === onyomi.toLowerCase() 
+            randomCharacter.onyomi === onyomi
             ? "correct" 
             : "incorrect";
 
         let kunyomiStatus = 
-            randomCharacter.kunyomi === kunyomi.toLowerCase() 
+            randomCharacter.kunyomi === kunyomi
             ? "correct" 
             : "incorrect";
+
+        if(onyomiStatus === "correct")
+            setScore((prevScore) => prevScore + 1);
+        if(kunyomiStatus === "correct")
+            setScore((prevScore) => prevScore + 1);
 
         alert(`Onyomi: ${onyomiStatus} Kunyomi: ${kunyomiStatus}`);
     }
