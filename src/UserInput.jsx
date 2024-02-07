@@ -31,12 +31,25 @@ function UserInput({ randomCharacter, updateScore, fetchRandomCharacter }) {
             ? "correct" 
             : "incorrect";
 
+        let alertString = "";
+
         if(onyomiStatus === "correct")
             setScore((prevScore) => prevScore + 1);
         if(kunyomiStatus === "correct")
             setScore((prevScore) => prevScore + 1);
 
-        alert(`Onyomi: ${onyomiStatus} Kunyomi: ${kunyomiStatus}`);
+        if(onyomiStatus === "correct" && kunyomiStatus === "correct") {
+            alertString = "Perfect!";
+        }
+
+        else {
+            if(onyomiStatus === "incorrect")
+                alertString += `Onyomi: ${randomCharacter.onyomi} `;
+            if(kunyomiStatus === "incorrect")
+                alertString += `Kunyomi: ${randomCharacter.kunyomi} `;    
+        }
+
+        alert(alertString);
         fetchRandomCharacter();
     }
 

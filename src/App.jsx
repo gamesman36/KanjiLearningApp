@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import Image from "./Image";
 import Kanji from "./Kanji";
 import UserInput from "./UserInput";
 import Score from "./Score";
@@ -28,6 +29,7 @@ function App() {
 
   return randomCharacter && (
     <>
+      <Image path="fuji.jpeg" />
       <Kanji unicodeValue={randomCharacter.japanese} />
       {randomCharacter.english && <div>{randomCharacter.english}</div>}
       <div className="input">
