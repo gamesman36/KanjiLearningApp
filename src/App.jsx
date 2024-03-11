@@ -1,96 +1,65 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
-import Image from "./Image";
-import Kanji from "./Kanji";
-import UserInput from "./UserInput";
-import Score from "./Score";
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
-  const [randomCharacter, setRandomCharacter] = useState(null);
-  const [score, setScore] = useState(0);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
 
-    // implement authentication logic later
-  
-    setAuthenticated(true);
-  };
-
-  const handleLogout = () => {
-    setAuthenticated(false);
-  };
-
-  const handleScoreUpdate = (newScore) => {
-    setScore(newScore);
-  };
-
-  const fetchRandomCharacter = async () => {
     try {
-      const response = await fetch("http://localhost:3001/random");
+      const response = await fetch("http://localhost:3001/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
       const data = await response.json();
-      setRandomCharacter(data);
+
+      console.log(data);
+      if (data.message === "Authentication successful") {
+        setAuthenticated(true);
+      } else {
+        console.error("Authentication failed:", data.error);
+      }
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const renderLoginForm = () => {
-    return (
-      <div>
-        <h2>Login Form</h2>
-        <form onSubmit={handleLogin}>
-          <div style={{ marginBottom: '10px' }}>
-            <label>
-              Username:
-              <input type="text" style={{ marginLeft: '5px' }} />
-            </label>
-          </div>
-          <div style={{ marginBottom: '10px' }}>
-            <label>
-              Password:
-              <input type="password" style={{ marginLeft: '3px' }} />
-            </label>
-          </div>
-          <button type="submit" style={{ marginTop: '10px' }}>Login</button>
-        </form>
-      </div>
-    );
-  };  
-
-  const renderMainContent = () => {
-    if (!randomCharacter) {
-      return <div>Loading...</div>;
-    }
-
-    return (
-      <>
-        <button onClick={handleLogout} style={{ marginBottom: '10px' }}>Logout</button>
-        <Image path="fuji.jpeg" />
-        <Kanji unicodeValue={randomCharacter.japanese} />
-        {randomCharacter.english && <div>{randomCharacter.english}</div>}
-        <div className="input">
-          <UserInput
-            randomCharacter={randomCharacter}
-            updateScore={handleScoreUpdate}
-            fetchRandomCharacter={fetchRandomCharacter}
-          />
-        </div>
-        <Score score={score} />
-      </>
-    );
-  };
-
-  useEffect(() => {
-    if (authenticated) {
-      fetchRandomCharacter();
-    }
-  }, [authenticated]); // include authenticated state as a dependency
+  console.log("Authenticated:", authenticated);
 
   return (
     <div className="App">
-      {authenticated ? renderMainContent() : renderLoginForm()}
+      {authenticated ? (
+        <div>
+          <h2>Authenticated Content</h2>
+          <button onClick={() => setAuthenticated(false)}>Logout</button>
+          {/* Include authenticated content here */}
+        </div>
+      ) : (
+        <div>
+          <h2>Login Form</h2>
+          <form onSubmit={handleLogin}>
+            <div style={{ marginBottom: '10px' }}>
+              <label>
+                Username:
+                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} style={{ marginLeft: '5px' }} />
+              </label>
+            </div>
+            <div style={{ marginBottom: '10px' }}>
+              <label>
+                Password:
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} style={{ marginLeft: '3px' }} />
+              </label>
+            </div>
+            <button type="submit" style={{ marginTop: '10px' }}>Login</button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
