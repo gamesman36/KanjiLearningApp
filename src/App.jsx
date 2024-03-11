@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Image from "./Image";
 import Kanji from "./Kanji";
@@ -6,12 +6,25 @@ import UserInput from "./UserInput";
 import Score from "./Score";
 
 function App() {
+  const [authenticated, setAuthenticated] = useState(false);
   const [randomCharacter, setRandomCharacter] = useState(null);
   const [score, setScore] = useState(0);
 
-  useEffect(() => {
-    fetchRandomCharacter();
-  }, [score]);
+  const handleLogin = (event) => {
+    event.preventDefault();
+
+    // implement authentication logic later
+  
+    setAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setAuthenticated(false);
+  };
+
+  const handleScoreUpdate = (newScore) => {
+    setScore(newScore);
+  };
 
   const fetchRandomCharacter = async () => {
     try {
@@ -23,24 +36,62 @@ function App() {
     }
   };
 
-  const updateScore = (newScore) => {
-    setScore(newScore);
+  const renderLoginForm = () => {
+    return (
+      <div>
+        <h2>Login Form</h2>
+        <form onSubmit={handleLogin}>
+          <div style={{ marginBottom: '10px' }}>
+            <label>
+              Username:
+              <input type="text" style={{ marginLeft: '5px' }} />
+            </label>
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <label>
+              Password:
+              <input type="password" style={{ marginLeft: '3px' }} />
+            </label>
+          </div>
+          <button type="submit" style={{ marginTop: '10px' }}>Login</button>
+        </form>
+      </div>
+    );
+  };  
+
+  const renderMainContent = () => {
+    if (!randomCharacter) {
+      return <div>Loading...</div>;
+    }
+
+    return (
+      <>
+        <button onClick={handleLogout} style={{ marginBottom: '10px' }}>Logout</button>
+        <Image path="fuji.jpeg" />
+        <Kanji unicodeValue={randomCharacter.japanese} />
+        {randomCharacter.english && <div>{randomCharacter.english}</div>}
+        <div className="input">
+          <UserInput
+            randomCharacter={randomCharacter}
+            updateScore={handleScoreUpdate}
+            fetchRandomCharacter={fetchRandomCharacter}
+          />
+        </div>
+        <Score score={score} />
+      </>
+    );
   };
 
-  return randomCharacter && (
-    <>
-      <Image path="fuji.jpeg" />
-      <Kanji unicodeValue={randomCharacter.japanese} />
-      {randomCharacter.english && <div>{randomCharacter.english}</div>}
-      <div className="input">
-        <UserInput
-          randomCharacter={randomCharacter}
-          updateScore={updateScore}
-          fetchRandomCharacter={fetchRandomCharacter}
-        />
-      </div>
-      <Score score={score} />
-    </>
+  useEffect(() => {
+    if (authenticated) {
+      fetchRandomCharacter();
+    }
+  }, [authenticated]); // include authenticated state as a dependency
+
+  return (
+    <div className="App">
+      {authenticated ? renderMainContent() : renderLoginForm()}
+    </div>
   );
 }
 
