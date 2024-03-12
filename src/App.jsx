@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import "./App.css";
+import Image from "./Image";
+import Kanji from "./Kanji";
+import UserInput from "./UserInput";
+import Score from "./Score";
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [randomCharacter, setRandomCharacter] = useState(null);
+  const [score, setScore] = useState(0);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -22,6 +28,7 @@ function App() {
       console.log(data);
       if (data.message === "Authentication successful") {
         setAuthenticated(true);
+        fetchRandomCharacter(); // Fetch random character data after successful login
       } else {
         console.error("Authentication failed:", data.error);
       }
@@ -30,33 +37,70 @@ function App() {
     }
   };
 
-  console.log("Authenticated:", authenticated);
+  const handleLogout = () => {
+    setAuthenticated(false);
+  };
+
+  const handleScoreUpdate = (newScore) => {
+    setScore(newScore);
+  };
+
+  const fetchRandomCharacter = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/random");
+      const data = await response.json();
+      setRandomCharacter(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="App">
       {authenticated ? (
         <div>
-          <h2>Authenticated Content</h2>
-          <button onClick={() => setAuthenticated(false)}>Logout</button>
-          {/* Include authenticated content here */}
+          <button onClick={handleLogout}>Logout</button>
+          <Image path="fuji.jpeg" />
+          <Kanji unicodeValue={randomCharacter?.japanese} />
+          {randomCharacter?.english && <div>{randomCharacter.english}</div>}
+          <div className="input">
+            <UserInput
+              randomCharacter={randomCharacter}
+              updateScore={handleScoreUpdate}
+              fetchRandomCharacter={fetchRandomCharacter}
+            />
+          </div>
+          <Score score={score} />
         </div>
       ) : (
         <div>
           <h2>Login Form</h2>
           <form onSubmit={handleLogin}>
-            <div style={{ marginBottom: '10px' }}>
+            <div style={{ marginBottom: "10px" }}>
               <label>
                 Username:
-                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} style={{ marginLeft: '5px' }} />
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  style={{ marginLeft: "5px" }}
+                />
               </label>
             </div>
-            <div style={{ marginBottom: '10px' }}>
+            <div style={{ marginBottom: "10px" }}>
               <label>
                 Password:
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} style={{ marginLeft: '3px' }} />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  style={{ marginLeft: "3px" }}
+                />
               </label>
             </div>
-            <button type="submit" style={{ marginTop: '10px' }}>Login</button>
+            <button type="submit" style={{ marginTop: "10px" }}>
+              Login
+            </button>
           </form>
         </div>
       )}
