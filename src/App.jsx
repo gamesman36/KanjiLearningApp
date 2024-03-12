@@ -28,7 +28,7 @@ function App() {
       console.log(data);
       if (data.message === "Authentication successful") {
         setAuthenticated(true);
-        fetchRandomCharacter(); // Fetch random character data after successful login
+        fetchRandomCharacter();
       } else {
         console.error("Authentication failed:", data.error);
       }
@@ -59,7 +59,7 @@ function App() {
     <div className="App">
       {authenticated ? (
         <div>
-          <button onClick={handleLogout}>Logout</button>
+          <button onClick={handleLogout} style={{ marginBottom: "10px" }}>Logout</button>
           <Image path="fuji.jpeg" />
           <Kanji unicodeValue={randomCharacter?.japanese} />
           {randomCharacter?.english && <div>{randomCharacter.english}</div>}

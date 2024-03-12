@@ -31,6 +31,21 @@ db.connect((err) => {
   console.log("Connected to the database");
 });
 
+app.get("/random", (req, res) => {
+  const query = "SELECT * FROM characters ORDER BY RAND() LIMIT 1";
+
+  db.query(query, (err, result) => {
+    if (err) {
+      console.error("Error executing database query:", err);
+      res.status(500).json({ error: "Internal server error" });
+      return;
+    }
+
+    const randomCharacter = result[0];
+    res.json(randomCharacter);
+  });
+});
+
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
   console.log("Received username:", username);
