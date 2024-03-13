@@ -88,6 +88,35 @@ app.post("/updateHighScore", (req, res) => {
   });
 });
 
+app.post("/register", (req, res) => {
+  const { username, password } = req.body;
+
+  const query = "SELECT * FROM users WHERE username = ?";
+  db.query(query, [username], (err, result) => {
+    if (err) {
+      console.error("Error executing database query:", err);
+      res.status(500).json({ error: "Internal server error" });
+      return;
+    }
+
+    if (result.length > 0) {
+      res.status(400).json({ error: "Username already exists" });
+      return;
+    }
+
+    const insertQuery = "INSERT INTO users (username, password, highscore) VALUES (?, ?, ?)";
+    db.query(insertQuery, [username, password, 0], (err, result) => {
+      if (err) {
+        console.error("Error executing database query:", err);
+        res.status(500).json({ error: "Internal server error" });
+        return;
+      }
+
+      res.json({ message: "User registered successfully" });
+    });
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

@@ -31,6 +31,8 @@ function App() {
         setAuthenticated(true);
         setHighScore(data.highScore)
         fetchRandomCharacter();
+        setUsername("");
+        setPassword("");
       } else {
         alert("Incorrect login!");
         console.error("Authentication failed:", data.error);
@@ -56,7 +58,35 @@ function App() {
     }
     setAuthenticated(false);
   };
-  
+
+  const handleRegister = async () => {
+    if(!username.trim() || !password.trim()) {
+      alert("Username and password must be filled out.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3001/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Registration successful. You can now login.");
+        setUsername("");
+        setPassword("");
+      } else {
+        alert(data.error);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const handleScoreUpdate = (newScore) => {
     setScore(newScore);
   };
@@ -114,8 +144,11 @@ function App() {
                 />
               </label>
             </div>
-            <button type="submit" style={{ marginTop: "10px" }}>
+            <button type="submit" style={{ marginRight: "5px" }}>
               Login
+            </button>
+            <button type="button" onClick={handleRegister}>
+              Register
             </button>
           </form>
         </div>
