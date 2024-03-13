@@ -32,6 +32,7 @@ function App() {
         setHighScore(data.highScore)
         fetchRandomCharacter();
       } else {
+        alert("Incorrect login!");
         console.error("Authentication failed:", data.error);
       }
     } catch (error) {
@@ -39,10 +40,23 @@ function App() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    if (score > highScore) {
+      try {
+        await fetch("http://localhost:3001/updateHighScore", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, newHighScore: score }),
+        });
+      } catch (error) {
+        console.error("Error updating high score:", error);
+      }
+    }
     setAuthenticated(false);
   };
-
+  
   const handleScoreUpdate = (newScore) => {
     setScore(newScore);
   };

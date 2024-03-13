@@ -75,6 +75,19 @@ app.post("/login", (req, res) => {
   });
 });
 
+app.post("/updateHighScore", (req, res) => {
+  const { username, newHighScore } = req.body;
+  const updateQuery = "UPDATE users SET highscore = ? WHERE username = ?";
+  db.query(updateQuery, [newHighScore, username], (err, result) => {
+    if (err) {
+      console.error("Error updating high score:", err);
+      res.status(500).json({ error: "Internal server error" });
+      return;
+    }
+    res.json({ message: "High score updated successfully" });
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
