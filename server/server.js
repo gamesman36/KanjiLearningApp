@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import mysql from "mysql";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 const port = 3001;
+const saltRounds = 10;
 
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -67,13 +69,22 @@ app.post("/login", (req, res) => {
     const dbUser = result[0];
     console.log("High score: ", dbUser.highscore);
 
-    if (password === dbUser.password) {
-      res.json({ message: "Authentication successful", highScore: dbUser.highscore });
-    } else {
-      res.status(401).json({ error: "Invalid username or password" });
-    }
+    bcrypt.compare(password, dbUser.password, (err, isMatch) => {
+      if (err) {
+        console.error("Error comparing passwords:", err);
+        res.status(500).json({ error: "Internal server error" });
+        return;
+      }
+
+      if (isMatch) {
+        res.json({ message: "Authentication successful", highScore: dbUser.highscore });
+      } else {
+        res.status(401).json({ error: "Invalid username or password" });
+      }
+    });
   });
 });
+
 
 app.post("/updateHighScore", (req, res) => {
   const { username, newHighScore } = req.body;
@@ -104,18 +115,27 @@ app.post("/register", (req, res) => {
       return;
     }
 
-    const insertQuery = "INSERT INTO users (username, password, highscore) VALUES (?, ?, ?)";
-    db.query(insertQuery, [username, password, 0], (err, result) => {
+    bcrypt.hash(password, saltRounds, async (err, hash) => {
       if (err) {
-        console.error("Error executing database query:", err);
+        console.log("Error hashing password:", err);
         res.status(500).json({ error: "Internal server error" });
         return;
-      }
+      } else {
+        const insertQuery = "INSERT INTO users (username, password, highscore) VALUES (?, ?, ?)";
+        db.query(insertQuery, [username, hash, 0], (err, result) => {
+          if (err) {
+            console.error("Error executing database query:", err);
+            res.status(500).json({ error: "Internal server error" });
+            return;
+          }
 
-      res.json({ message: "User registered successfully" });
+          res.json({ message: "User registered successfully" });
+        });
+      }
     });
   });
 });
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
