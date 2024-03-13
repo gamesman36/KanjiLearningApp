@@ -65,9 +65,10 @@ app.post("/login", (req, res) => {
     }
 
     const dbUser = result[0];
+    console.log("High score: ", dbUser.highscore);
 
     if (password === dbUser.password) {
-      res.json({ message: "Authentication successful" });
+      res.json({ message: "Authentication successful", highScore: dbUser.highscore });
     } else {
       res.status(401).json({ error: "Invalid username or password" });
     }

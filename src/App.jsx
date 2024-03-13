@@ -11,6 +11,7 @@ function App() {
   const [password, setPassword] = useState("");
   const [randomCharacter, setRandomCharacter] = useState(null);
   const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -28,6 +29,7 @@ function App() {
       console.log(data);
       if (data.message === "Authentication successful") {
         setAuthenticated(true);
+        setHighScore(data.highScore)
         fetchRandomCharacter();
       } else {
         console.error("Authentication failed:", data.error);
@@ -70,7 +72,7 @@ function App() {
               fetchRandomCharacter={fetchRandomCharacter}
             />
           </div>
-          <Score score={score} />
+          <Score score={score} highScore={highScore}/>
         </div>
       ) : (
         <div>
